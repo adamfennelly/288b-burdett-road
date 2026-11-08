@@ -155,6 +155,23 @@
     margin-right: 18px;
   }
   .icon-fact:last-child { border-right: none; margin-right: 0; }
+  @media (max-width: 640px) {
+    .icon-facts .inner {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4px 14px;
+      padding: 12px 16px;
+    }
+    .icon-fact {
+      border-right: none;
+      margin-right: 0;
+      padding: 8px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .icon-fact:nth-last-child(-n+2) {
+      border-bottom: none;
+    }
+  }
   .icon-fact svg {
     width: 22px;
     height: 22px;
