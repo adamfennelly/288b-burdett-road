@@ -24,59 +24,113 @@
     line-height: 1.5;
   }
 
-  /* Hero */
-  .hero {
+  /* Carousel */
+  .carousel {
     position: relative;
     width: 100%;
-    max-height: 70vh;
+    height: min(60vh, 460px);
+    min-height: 240px;
     overflow: hidden;
     background: var(--navy-dark);
-    display: flex;
-    justify-content: center;
   }
-  .hero img {
-    width: 100%;
-    height: auto;
-    max-height: 70vh;
-    object-fit: contain;
-    display: block;
+  .carousel-track {
+    display: flex;
+    height: 100%;
+    transition: transform 0.35s ease;
+  }
+  .carousel .slide {
+    min-width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     background: var(--navy-dark);
   }
-  .hero .scrim {
+  .carousel .slide img {
+    max-width: 100%;
+    max-height: 100%;
+    width: auto;
+    height: auto;
+    object-fit: contain;
+    display: block;
+  }
+  .carousel .scrim {
     position: absolute;
     inset: 0;
-    background: linear-gradient(180deg, rgba(21,40,71,0) 40%, rgba(21,40,71,0.88) 100%);
+    background: linear-gradient(180deg, rgba(21,40,71,0) 45%, rgba(21,40,71,0.88) 100%);
+    pointer-events: none;
+    z-index: 2;
   }
-  .hero .hero-text {
+  .carousel .hero-text {
     position: absolute;
     left: 0; right: 0; bottom: 0;
-    padding: 20px;
+    padding: 18px 20px;
     color: #fff;
+    z-index: 3;
+    pointer-events: none;
   }
-  .hero .hero-inner {
+  .carousel .hero-inner {
     max-width: 960px;
     margin: 0 auto;
   }
-  .hero h1 {
+  .carousel h1 {
     margin: 0 0 4px 0;
-    font-size: 1.5rem;
+    font-size: clamp(1rem, 4.2vw, 1.5rem);
+    line-height: 1.25;
+    overflow-wrap: break-word;
   }
-  .hero .price {
-    font-size: 1.3rem;
+  .carousel .price {
+    font-size: clamp(1rem, 3.6vw, 1.3rem);
     font-weight: 700;
     color: #ffd27a;
   }
-  .hero .status {
+  .carousel .status {
     display: inline-block;
     background: var(--accent);
     color: #fff;
-    font-size: 0.75rem;
+    font-size: 0.7rem;
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.04em;
-    padding: 4px 10px;
+    padding: 3px 9px;
     border-radius: 4px;
-    margin-bottom: 8px;
+    margin-bottom: 6px;
+  }
+  .car-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(21,40,71,0.55);
+    color: #fff;
+    border: none;
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    font-size: 1rem;
+    cursor: pointer;
+    z-index: 4;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .car-btn:hover { background: rgba(21,40,71,0.85); }
+  .car-btn.prev { left: 10px; }
+  .car-btn.next { right: 10px; }
+  .car-counter {
+    position: absolute;
+    top: 14px;
+    right: 14px;
+    background: rgba(0,0,0,0.55);
+    color: #fff;
+    font-size: 0.78rem;
+    padding: 3px 10px;
+    border-radius: 12px;
+    z-index: 4;
+  }
+  @media (max-width: 480px) {
+    .carousel { height: min(42vh, 320px); min-height: 200px; }
+    .carousel .hero-text { padding: 12px 14px; }
+    .car-btn { width: 32px; height: 32px; font-size: 0.85rem; }
   }
 
   /* Icon fact strip, Rightmove-style */
@@ -130,20 +184,6 @@
     border-bottom: 1px solid var(--border);
     padding-bottom: 6px;
     margin-top: 36px;
-  }
-  .gallery {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-    gap: 10px;
-    margin-top: 14px;
-  }
-  .gallery img {
-    width: 100%;
-    height: auto;
-    display: block;
-    border-radius: 8px;
-    border: 1px solid var(--border);
-    background: var(--card);
   }
   .fp-epc {
     display: grid;
@@ -224,8 +264,21 @@
 </head>
 <body>
 
-<div class="hero">
-  <img src="images/Exterior.jpeg" alt="288b Burdett Road, Limehouse — exterior (placeholder, to be replaced with our own photo)">
+<div class="carousel" id="carousel">
+  <div class="carousel-track" id="carouselTrack">
+    <div class="slide"><img src="images/Exterior.jpeg" alt="Exterior (placeholder, to be replaced with our own photo)"></div>
+    <div class="slide"><img src="images/Lounge1.jpeg" alt="Lounge"></div>
+    <div class="slide"><img src="images/Lounge2.jpeg" alt="Lounge, second view"></div>
+    <div class="slide"><img src="images/Kitchen.jpeg" alt="Kitchen"></div>
+    <div class="slide"><img src="images/MasterBedroom1.jpeg" alt="Master bedroom"></div>
+    <div class="slide"><img src="images/MasterBedroom2.jpeg" alt="Master bedroom, second view"></div>
+    <div class="slide"><img src="images/SecondBedroom1.jpeg" alt="Second bedroom"></div>
+    <div class="slide"><img src="images/Bathroom.jpeg" alt="Bathroom"></div>
+    <div class="slide"><img src="images/Hallway.jpeg" alt="Hallway"></div>
+  </div>
+  <button class="car-btn prev" aria-label="Previous photo" onclick="carouselMove(-1)">&#10094;</button>
+  <button class="car-btn next" aria-label="Next photo" onclick="carouselMove(1)">&#10095;</button>
+  <div class="car-counter" id="carCounter">1 / 9</div>
   <div class="scrim"></div>
   <div class="hero-text">
     <div class="hero-inner">
@@ -316,19 +369,6 @@
     Your browser does not support the video tag.
   </video>
 
-  <h2 id="photos">Photos</h2>
-  <div class="gallery">
-    <img src="images/Exterior.jpeg" alt="Exterior (placeholder, to be replaced with our own photo)">
-    <img src="images/Lounge1.jpeg" alt="Lounge">
-    <img src="images/Lounge2.jpeg" alt="Lounge, second view">
-    <img src="images/Kitchen.jpeg" alt="Kitchen">
-    <img src="images/MasterBedroom1.jpeg" alt="Master bedroom">
-    <img src="images/MasterBedroom2.jpeg" alt="Master bedroom, second view">
-    <img src="images/SecondBedroom1.jpeg" alt="Second bedroom">
-    <img src="images/Bathroom.jpeg" alt="Bathroom">
-    <img src="images/Hallway.jpeg" alt="Hallway">
-  </div>
-
   <h2>Contact</h2>
   <div class="contact">
     <p><strong>Sara Fennelly</strong> — <a href="tel:+447703033108">07703 033108</a> — <a href="mailto:sara@feneli.co.uk">sara@feneli.co.uk</a></p>
@@ -340,6 +380,38 @@
 <footer>
   288b Burdett Road, Limehouse, London E14 7DQ
 </footer>
+
+<script>
+(function () {
+  var track = document.getElementById('carouselTrack');
+  var counter = document.getElementById('carCounter');
+  var slides = track.children;
+  var total = slides.length;
+  var index = 0;
+
+  function update() {
+    track.style.transform = 'translateX(' + (-index * 100) + '%)';
+    counter.textContent = (index + 1) + ' / ' + total;
+  }
+
+  window.carouselMove = function (dir) {
+    index = (index + dir + total) % total;
+    update();
+  };
+
+  var car = document.getElementById('carousel');
+  var startX = null;
+  car.addEventListener('touchstart', function (e) { startX = e.touches[0].clientX; }, { passive: true });
+  car.addEventListener('touchend', function (e) {
+    if (startX === null) return;
+    var dx = e.changedTouches[0].clientX - startX;
+    if (Math.abs(dx) > 40) { window.carouselMove(dx < 0 ? 1 : -1); }
+    startX = null;
+  }, { passive: true });
+
+  update();
+})();
+</script>
 
 </body>
 </html>
